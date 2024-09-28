@@ -34,7 +34,11 @@ if st.button("Generate Response"):
     if user_input:
         chat_session = model.start_chat(history=[])
         response = chat_session.send_message(user_input)
+        
+        # Limit response line length
+        formatted_response = "\n".join([response.text[i:i+60] for i in range(0, len(response.text), 60)])
+
         st.write("Response:")
-        st.code(response.text, language='text')
+        st.code(formatted_response, language='text')
     else:
         st.warning("Please enter a message before generating a response.")
