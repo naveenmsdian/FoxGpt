@@ -27,7 +27,7 @@ st.title("FOX GPT")
 st.write("Created by Naveen Kumar")
 
 # Text input for user message
-user_input = st.text_area("Your Input:")
+user_input = st.text_area("Your Input:", height=150)
 
 # Button to generate response
 if st.button("Generate Response"):
@@ -35,6 +35,6 @@ if st.button("Generate Response"):
         chat_session = model.start_chat(history=[])
         response = chat_session.send_message(user_input)
         st.write("Response:")
-        st.text(response.text)
+        st.code(response.text, language='text')
     else:
         st.warning("Please enter a message before generating a response.")
