@@ -35,10 +35,34 @@ if st.button("Generate Response"):
         chat_session = model.start_chat(history=[])
         response = chat_session.send_message(user_input)
         
-        # Limit response line length
-        formatted_response = "\n".join([response.text[i:i+60] for i in range(0, len(response.text), 60)])
+        # Properly format response with 8 words per line, new lines after sentences, and breaks between points
+        def wrap_text(text, max_words):
+            words = text.split()
+            lines = []
+            current_line = []
 
-        st.write("Response:")
+            for word in words:
+                current_line.append(word)
+                if len(current_line) == max_words:
+                    lines.append(" ".join(current_line))
+                    current_line = []
+                
+                # Check if the last word is a period, indicating end of a sentence
+                if word.endswith('.'):
+                    if current_line:  # Add the current line if not empty
+                        lines.append(" ".join(current_line))
+                        lines.append("")  # Add an empty line for a break
+                        current_line = []
+            
+            # Add any remaining words to the final line
+            if current_line:
+                lines.append(" ".join(current_line))
+                
+            return "\n".join(lines)
+
+        formatted_response = wrap_text(response.text, 8)
+
+        st.write("**Response:**")  # Bold heading
         st.code(formatted_response, language='text')
     else:
         st.warning("Please enter a message before generating a response.")
